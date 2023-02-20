@@ -68,7 +68,9 @@ require("lazy").setup({
 
   { -- The superior project management solution for Neovim
     "ahmedkhalf/project.nvim",
-    config = function() require("project_nvim").setup() end,
+    config = function()
+      require("project_nvim").setup()
+    end,
   },
 
   { -- Magit clone for Neovim
@@ -79,6 +81,7 @@ require("lazy").setup({
 
   { -- Git decorations for buffers
     "lewis6991/gitsigns.nvim",
+    event = 'BufReadPost',
     opts = {
       on_attach = function()
         local gs = package.loaded.gitsigns
@@ -92,7 +95,10 @@ require("lazy").setup({
         vim.keymap.set({"o", "x"}, "ig", gs.select_hunk)
       end,
     },
-    event = 'BufReadPost',
+  },
+
+  { -- A Git wrapper so awesome, it should be illegal
+    "tpope/vim-fugitive", cmd = "Git"
   },
 
   { -- General-purpose motion plugin for Neovim
