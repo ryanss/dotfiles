@@ -118,7 +118,9 @@ require("lazy").setup({
   },
 
   { -- A Git wrapper so awesome, it should be illegal
-    "tpope/vim-fugitive", cmd = "Git"
+    "tpope/vim-fugitive",
+    cmd = "Git",
+    keys = {{ "<leader>gb", [[<cmd>Git blame<cr>]] }},
   },
 
   { -- General-purpose motion plugin for Neovim
