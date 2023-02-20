@@ -74,7 +74,25 @@ require("lazy").setup({
   { -- Magit clone for Neovim
     'TimUntersberger/neogit',
     opts = { disable_commit_confirmation = true },
-    keys = {{ "<leader>gs", [[<cmd>Neogit<cr>]] }},
+    keys = {{ "<leader>gg", [[<cmd>Neogit<cr>]] }},
+  },
+
+  { -- Git decorations for buffers
+    "lewis6991/gitsigns.nvim",
+    opts = {
+      on_attach = function()
+        local gs = package.loaded.gitsigns
+        vim.keymap.set("n", "[g", gs.prev_hunk)
+        vim.keymap.set("n", "]g", gs.next_hunk)
+        vim.keymap.set("n", "<leader>gd", gs.toggle_deleted)
+        vim.keymap.set("n", "<leader>gp", gs.preview_hunk)
+        vim.keymap.set("n", "<leader>gr", gs.reset_hunk)
+        vim.keymap.set("n", "<leader>gs", gs.stage_hunk)
+        vim.keymap.set("n", "<leader>gu", gs.undo_stage_hunk)
+        vim.keymap.set({"o", "x"}, "ig", gs.select_hunk)
+      end,
+    },
+    event = 'BufReadPost',
   },
 
   { -- General-purpose motion plugin for Neovim
@@ -83,7 +101,6 @@ require("lazy").setup({
       require("leap").add_default_mappings()
     end,
   },
-
 
 })
 
