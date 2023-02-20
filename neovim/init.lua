@@ -73,6 +73,26 @@ require("lazy").setup({
     end,
   },
 
+  { -- A file explorer tree for neovim
+    "nvim-tree/nvim-tree.lua",
+    opts = {
+      sync_root_with_cwd = true,
+      respect_buf_cwd = true,
+      update_focused_file = {
+        enable = true,
+        update_root = true
+      },
+      filters = { dotfiles = true }
+    },
+    keys = {{ "<leader>t", [[<cmd>NvimTreeToggle<cr>]] }},
+  },
+
+  { -- File manager for Neovim powered by nnn
+    "luukvbaal/nnn.nvim",
+    config = true,
+    keys = {{ "<leader>n", [[<cmd>NnnPicker<cr>]] }},
+  },
+
   { -- Magit clone for Neovim
     'TimUntersberger/neogit',
     opts = { disable_commit_confirmation = true },
