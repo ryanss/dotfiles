@@ -52,6 +52,17 @@ require("lazy").setup({
     end,
   },
 
+  { -- A blazing fast and easy to configure neovim statusline plugin
+    "nvim-lualine/lualine.nvim",
+    dependencies = "kyazdani42/nvim-web-devicons",
+    opts = {
+      options = {
+        component_separators = '',
+        section_separators = { left = '', right = '' },
+      },
+    },
+  },
+
   { -- Highly extendable fuzzy finder over lists
     "nvim-telescope/telescope.nvim",
     dependencies = "nvim-lua/plenary.nvim",
