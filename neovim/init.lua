@@ -9,6 +9,7 @@ vim.o.laststatus = 3
 vim.o.scrolloff = 3
 vim.o.shiftwidth = 4
 vim.o.sidescrolloff = 3
+vim.o.signcolumn = "yes"
 vim.o.smartcase = true
 vim.o.swapfile = false
 vim.o.tabstop = 4
