@@ -57,8 +57,8 @@ require("lazy").setup({
     dependencies = "kyazdani42/nvim-web-devicons",
     opts = {
       options = {
-        component_separators = '',
-        section_separators = { left = '', right = '' },
+        component_separators = "",
+        section_separators = { left = "", right = "" },
       },
     },
   },
@@ -105,19 +105,17 @@ require("lazy").setup({
   },
 
   { -- Magit clone for Neovim
-    'TimUntersberger/neogit',
+    "TimUntersberger/neogit",
     opts = { disable_commit_confirmation = true },
     keys = {{ "<leader>gg", [[<cmd>Neogit<cr>]] }},
   },
 
   { -- Git decorations for buffers
     "lewis6991/gitsigns.nvim",
-    event = 'BufReadPost',
+    event = "BufReadPost",
     opts = {
       on_attach = function()
         local gs = package.loaded.gitsigns
-        vim.keymap.set("n", "[g", gs.prev_hunk)
-        vim.keymap.set("n", "]g", gs.next_hunk)
         vim.keymap.set("n", "<leader>gd", gs.toggle_deleted)
         vim.keymap.set("n", "<leader>gp", gs.preview_hunk)
         vim.keymap.set("n", "<leader>gr", gs.reset_hunk)
@@ -132,6 +130,72 @@ require("lazy").setup({
     "tpope/vim-fugitive",
     cmd = "Git",
     keys = {{ "<leader>gb", [[<cmd>Git blame<cr>]] }},
+  },
+
+  { -- Nvim Treesitter configurations and abstraction layer
+    "nvim-treesitter/nvim-treesitter",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        auto_install = true,
+        highlight = { enable = true },
+      })
+    end,
+  },
+
+  { -- Syntax aware text-objects, select, move, swap, and peek support
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        textobjects = {
+          select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+              ["aa"] = "@parameter.outer",
+              ["ia"] = "@parameter.inner",
+              ["ac"] = "@comment.outer",
+              ["ic"] = "@comment.inner",
+              ["aC"] = "@class.outer",
+              ["iC"] = "@class.inner",
+              ["af"] = "@function.outer",
+              ["if"] = "@function.inner",
+            },
+          },
+          move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+              ["]a"] = "@parameter.inner",
+              ["]c"] = "@comment.outer",
+              ["]C"] = "@class.outer",
+              ["]f"] = "@function.outer",
+            },
+            goto_previous_start = {
+              ["[a"] = "@parameter.inner",
+              ["[c"] = "@comment.outer",
+              ["[C"] = "@class.outer",
+              ["[f"] = "@function.outer",
+            },
+          },
+        }
+      })
+      -- Make movements repeatable with ; and ,
+      local ts_repeat = require("nvim-treesitter.textobjects.repeatable_move")
+      vim.keymap.set({"n", "x", "o"}, ";", ts_repeat.repeat_last_move)
+      vim.keymap.set({"n", "x", "o"}, ",", ts_repeat.repeat_last_move_opposite)
+      -- Make builtin f, F, t, T also repeatable with ; and ,
+      vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat.builtin_f)
+      vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat.builtin_F)
+      vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat.builtin_t)
+      vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat.builtin_T)
+      -- Make gitsigns.nvim movement repeatable with ; and ,
+      local gs = require("gitsigns")
+      local next_hunk, prev_hunk =
+          ts_repeat.make_repeatable_move_pair(gs.next_hunk, gs.prev_hunk)
+      vim.keymap.set({ "n", "x", "o" }, "]g", next_hunk)
+      vim.keymap.set({ "n", "x", "o" }, "[g", prev_hunk)
+    end,
   },
 
   { -- General-purpose motion plugin for Neovim
