@@ -216,6 +216,21 @@ require("lazy").setup({
     end,
   },
 
+  { -- Use treesitter to auto close and auto rename html tags
+    "windwp/nvim-ts-autotag",
+    config = true,
+  },
+
+  { -- A super powerful autopair plugin for Neovim that supports multiple characters
+    "windwp/nvim-autopairs",
+    config = true,
+  },
+
+  { -- Add/change/delete surrounding delimiter pairs with ease
+    "kylechui/nvim-surround",
+    config = true,
+  },
+
   { -- General-purpose motion plugin for Neovim
     "ggandor/leap.nvim",
     config = function()
