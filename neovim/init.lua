@@ -158,20 +158,6 @@ require("lazy").setup({
     config = function()
       require("nvim-treesitter.configs").setup({
         textobjects = {
-          select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-              ["aa"] = "@parameter.outer",
-              ["ia"] = "@parameter.inner",
-              ["ac"] = "@comment.outer",
-              ["ic"] = "@comment.inner",
-              ["aC"] = "@class.outer",
-              ["iC"] = "@class.inner",
-              ["af"] = "@function.outer",
-              ["if"] = "@function.inner",
-            },
-          },
           move = {
             enable = true,
             set_jumps = true,
@@ -188,14 +174,20 @@ require("lazy").setup({
               ["[f"] = "@function.outer",
             },
           },
+          select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+              ["aa"] = "@parameter.outer",  ["ia"] = "@parameter.inner",
+              ["ac"] = "@comment.outer",    ["ic"] = "@comment.inner",
+              ["aC"] = "@class.outer",      ["iC"] = "@class.inner",
+              ["af"] = "@function.outer",   ["if"] = "@function.inner",
+            },
+          },
           swap = {
             enable = true,
-            swap_next = {
-              ["<leader>a"] = "@parameter.inner",
-            },
-            swap_previous = {
-              ["<leader>A"] = "@parameter.inner",
-            },
+            swap_next =     { ["<leader>a"] = "@parameter.inner" },
+            swap_previous = { ["<leader>A"] = "@parameter.inner" },
           },
         }
       })
