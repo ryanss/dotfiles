@@ -231,6 +231,32 @@ require("lazy").setup({
     config = true,
   },
 
+  { -- Smart and powerful comment plugin for neovim
+    "numToStr/Comment.nvim",
+    config = true,
+  },
+
+  { -- Improved Yank and Put functionalities for Neovim
+    "gbprod/yanky.nvim",
+    dependencies = "kkharji/sqlite.lua",
+    config = function()
+      require("yanky").setup({
+        ring = {
+          storage = "sqlite",
+        }
+      })
+      vim.keymap.set({"n", "x"}, "y", [[<Plug>(YankyYank)]])
+      vim.keymap.set({'n','x'}, 'p', [[<Plug>(YankyPutAfter)]])
+      vim.keymap.set({'n','x'}, 'P', [[<Plug>(YankyPutBefore)]])
+      vim.keymap.set("n", "<C-p>", [[<Plug>(YankyCycleForward)]])
+      vim.keymap.set("n", "<C-n>", [[<Plug>(YankyCycleBackward)]])
+      require("telescope").load_extension("yank_history")
+      vim.keymap.set("n", "<leader>y", [[<cmd>Telescope yank_history<cr>]])
+      -- Copy to system clipboard
+      vim.keymap.set('v', '<C-c>', '"+y')
+    end,
+  },
+
   { -- General-purpose motion plugin for Neovim
     "ggandor/leap.nvim",
     config = function()
