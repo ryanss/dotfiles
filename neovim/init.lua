@@ -96,6 +96,7 @@ require("lazy").setup({
       },
       filters = { dotfiles = true }
     },
+    cmd = "NvimTreeToggle",
     keys = {{ "<leader>t", [[<cmd>NvimTreeToggle<cr>]] }},
   },
 
@@ -257,9 +258,51 @@ require("lazy").setup({
     end,
   },
 
+  { -- A neovim lua plugin to help easily manage multiple terminal windows
+    "akinsho/toggleterm.nvim",
+    cmd = "ToggleTerm",
+    opts = {
+      size = function(term)
+        if term.direction == 'vertical' then return vim.o.columns * 0.5
+        else return vim.o.lines * 0.3 end
+      end,
+    },
+  },
+
 })
 
 
 -- Keymaps
+vim.keymap.set("n", "<leader>l", [[<cmd>Lazy<cr>]])
+
+-- Fix j/k movements in wrapped lines
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true })
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true })
+
+-- Toggle terminals; move between splits
+local function toggle_term_wincmd(key, direction)
+  vcount = vim.v.count
+  if vim.fn.mode() == "t" then vcount = 0 end
+  if vcount >= 1 or vim.fn.winnr() == vim.fn.winnr(key) then
+    if key == "h"
+      then vim.cmd([[NvimTreeToggle]])
+    else
+      local id = require("toggleterm.terminal").get_focused_id() or vcount or 0
+      require("toggleterm").toggle(id, nil, nil, direction)
+    end
+  else
+    vim.cmd("wincmd " .. key)
+  end
+end
+vim.keymap.set({"n", "t"}, "<C-h>", function() toggle_term_wincmd("h") end)
+vim.keymap.set({"n", "t"}, "<C-j>", function() toggle_term_wincmd("j", "horizontal") end)
+vim.keymap.set({"n", "t"}, "<C-k>", function() toggle_term_wincmd("k", "float") end)
+vim.keymap.set({"n", "t"}, "<C-l>", function() toggle_term_wincmd("l", "vertical") end)
+vim.keymap.set("t", "<C-]>", "<C-\\><C-n>")
+vim.keymap.set("t", "<C-w>o", [[<cmd>wincmd o<cr>]])
+
+-- Resize splits
+vim.keymap.set({'n','t'}, '<C-A-j>', [[<cmd>resize -2<cr>]])
+vim.keymap.set({'n','t'}, '<C-A-k>', [[<cmd>resize +2<cr>]])
+vim.keymap.set({'n','t'}, '<C-A-h>', [[<cmd>vertical resize +3<cr>]])
+vim.keymap.set({'n','t'}, '<C-A-l>', [[<cmd>vertical resize -3<cr>]])
