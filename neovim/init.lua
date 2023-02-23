@@ -148,20 +148,34 @@ require("lazy").setup({
     config = function()
       require("mason").setup({})
       require("mason-lspconfig").setup({})
-      vim.keymap.set('n', 'K', vim.lsp.buf.hover)
-      vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
-      vim.keymap.set('n', 'gr', vim.lsp.buf.references)
-      vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action)
-      vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename)
-      vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+      vim.keymap.set("n", "<leader>m", [[<cmd>Mason<cr>]])
+
+      vim.keymap.set("n", "K", vim.lsp.buf.hover)
+      vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+      vim.keymap.set("n", "gr", vim.lsp.buf.references)
+      vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action)
+      vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename)
+      vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
+
       local ts_repeat = require("nvim-treesitter.textobjects.repeatable_move")
-      local goto_next = vim.diagnostic.goto_next
-      local goto_prev = vim.diagnostic.goto_prev
       local next_diagnostic, prev_diagnostic =
-        ts_repeat.make_repeatable_move_pair(goto_next, goto_prev)
-      vim.keymap.set({'n', "x", "o"}, ']d', next_diagnostic)
-      vim.keymap.set({'n', "x", "o"}, '[d', prev_diagnostic)
+        ts_repeat.make_repeatable_move_pair(
+          vim.diagnostic.goto_next, vim.diagnostic.goto_prev)
+      vim.keymap.set({"n", "x", "o"}, "]d", next_diagnostic)
+      vim.keymap.set({"n", "x", "o"}, "[d", prev_diagnostic)
+
       require("lspconfig").lua_ls.setup({})
+      require("lspconfig").pyright.setup({
+        settings = { python = { pythonPath = ".venv/bin/python" } },
+      })
+    end,
+  },
+
+  { -- Detects and activates virtualenvs in your poetry or pipenv project
+    "petobens/poet-v",
+    init = function()
+      vim.g.poetv_executables = {"poetry"}
+      vim.g.poetv_auto_activate = 1
     end,
   },
 
@@ -240,7 +254,7 @@ require("lazy").setup({
     config = true,
   },
 
-  { -- A super powerful autopair plugin for Neovim that supports multiple characters
+  { -- Autopair plugin for Neovim that supports multiple characters
     "windwp/nvim-autopairs",
     config = true,
   },
@@ -265,14 +279,14 @@ require("lazy").setup({
         }
       })
       vim.keymap.set({"n", "x"}, "y", [[<Plug>(YankyYank)]])
-      vim.keymap.set({'n','x'}, 'p', [[<Plug>(YankyPutAfter)]])
-      vim.keymap.set({'n','x'}, 'P', [[<Plug>(YankyPutBefore)]])
+      vim.keymap.set({"n", "x"}, "p", [[<Plug>(YankyPutAfter)]])
+      vim.keymap.set({"n", "x"}, "P", [[<Plug>(YankyPutBefore)]])
       vim.keymap.set("n", "<C-p>", [[<Plug>(YankyCycleForward)]])
       vim.keymap.set("n", "<C-n>", [[<Plug>(YankyCycleBackward)]])
       require("telescope").load_extension("yank_history")
       vim.keymap.set("n", "<leader>y", [[<cmd>Telescope yank_history<cr>]])
       -- Copy to system clipboard
-      vim.keymap.set('v', '<C-c>', '"+y')
+      vim.keymap.set("v", "<C-c>", '"+y')
     end,
   },
 
@@ -288,7 +302,7 @@ require("lazy").setup({
     cmd = "ToggleTerm",
     opts = {
       size = function(term)
-        if term.direction == 'vertical' then return vim.o.columns * 0.5
+        if term.direction == "vertical" then return vim.o.columns * 0.5
         else return vim.o.lines * 0.3 end
       end,
     },
@@ -305,7 +319,7 @@ vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true })
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true })
 
 -- Toggle terminals; move between splits
-local function toggle_term_wincmd(key, direction)
+local function termcmd(key, direction)
   local vcount = vim.v.count
   if vim.fn.mode() == "t" then vcount = 0 end
   if vcount >= 1 or vim.fn.winnr() == vim.fn.winnr(key) then
@@ -319,15 +333,15 @@ local function toggle_term_wincmd(key, direction)
     vim.cmd("wincmd " .. key)
   end
 end
-vim.keymap.set({"n", "t"}, "<C-h>", function() toggle_term_wincmd("h") end)
-vim.keymap.set({"n", "t"}, "<C-j>", function() toggle_term_wincmd("j", "horizontal") end)
-vim.keymap.set({"n", "t"}, "<C-k>", function() toggle_term_wincmd("k", "float") end)
-vim.keymap.set({"n", "t"}, "<C-l>", function() toggle_term_wincmd("l", "vertical") end)
+vim.keymap.set({"n", "t"}, "<C-h>", function() termcmd("h") end)
+vim.keymap.set({"n", "t"}, "<C-j>", function() termcmd("j", "horizontal") end)
+vim.keymap.set({"n", "t"}, "<C-k>", function() termcmd("k", "float") end)
+vim.keymap.set({"n", "t"}, "<C-l>", function() termcmd("l", "vertical") end)
 vim.keymap.set("t", "<C-]>", "<C-\\><C-n>")
 vim.keymap.set("t", "<C-w>o", [[<cmd>wincmd o<cr>]])
 
 -- Resize splits
-vim.keymap.set({'n','t'}, '<C-A-j>', [[<cmd>resize -2<cr>]])
-vim.keymap.set({'n','t'}, '<C-A-k>', [[<cmd>resize +2<cr>]])
-vim.keymap.set({'n','t'}, '<C-A-h>', [[<cmd>vertical resize +3<cr>]])
-vim.keymap.set({'n','t'}, '<C-A-l>', [[<cmd>vertical resize -3<cr>]])
+vim.keymap.set({"n", "t"}, "<C-A-j>", [[<cmd>resize -2<cr>]])
+vim.keymap.set({"n", "t"}, "<C-A-k>", [[<cmd>resize +2<cr>]])
+vim.keymap.set({"n", "t"}, "<C-A-h>", [[<cmd>vertical resize +3<cr>]])
+vim.keymap.set({"n", "t"}, "<C-A-l>", [[<cmd>vertical resize -3<cr>]])
