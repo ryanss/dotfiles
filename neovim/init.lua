@@ -17,7 +17,7 @@ vim.o.termguicolors = true
 vim.o.wrap = false
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "lua",
+  pattern = "json,lua",
   callback = function()
     vim.bo.shiftwidth = 2
     vim.bo.tabstop = 2
@@ -132,6 +132,27 @@ require("lazy").setup({
     "tpope/vim-fugitive",
     cmd = "Git",
     keys = {{ "<leader>gb", [[<cmd>Git blame<cr>]] }},
+  },
+
+  { -- Language Server Protocols
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+    },
+    config = function()
+      require("mason").setup({})
+      require("mason-lspconfig").setup({})
+      vim.keymap.set('n', 'K', vim.lsp.buf.hover)
+      vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
+      vim.keymap.set('n', 'gr', vim.lsp.buf.references)
+      vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action)
+      vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename)
+      vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+      vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+      vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+      require("lspconfig").lua_ls.setup({})
+    end,
   },
 
   { -- Nvim Treesitter configurations and abstraction layer
@@ -281,7 +302,7 @@ vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true })
 
 -- Toggle terminals; move between splits
 local function toggle_term_wincmd(key, direction)
-  vcount = vim.v.count
+  local vcount = vim.v.count
   if vim.fn.mode() == "t" then vcount = 0 end
   if vcount >= 1 or vim.fn.winnr() == vim.fn.winnr(key) then
     if key == "h"
