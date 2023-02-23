@@ -55,7 +55,7 @@ require("lazy").setup({
 
   { -- A blazing fast and easy to configure neovim statusline plugin
     "nvim-lualine/lualine.nvim",
-    dependencies = "kyazdani42/nvim-web-devicons",
+    dependencies = "nvim-tree/nvim-web-devicons",
     opts = {
       options = {
         component_separators = "",
@@ -67,9 +67,6 @@ require("lazy").setup({
   { -- Highly extendable fuzzy finder over lists
     "nvim-telescope/telescope.nvim",
     dependencies = "nvim-lua/plenary.nvim",
-    config = function()
-      require("telescope").load_extension("projects")
-    end,
     keys = {
       { "<leader>f", [[<cmd>Telescope find_files hidden=true<cr>]] },
       { "<leader>p", [[<cmd>Telescope projects<cr>]] },
@@ -82,6 +79,7 @@ require("lazy").setup({
     "ahmedkhalf/project.nvim",
     config = function()
       require("project_nvim").setup()
+      require("telescope").load_extension("projects")
     end,
   },
 
@@ -214,6 +212,30 @@ require("lazy").setup({
       })
     end,
     keys = {{ "<leader>o", [[<cmd>SymbolsOutline<cr>]]}},
+  },
+
+  { -- Pretty diagnostics, references, telescope results, quickfix/location list
+    "folke/trouble.nvim",
+    dependencies = "nvim-tree/nvim-web-devicons",
+    config = function()
+      local trouble = require("trouble.providers.telescope")
+      require("telescope").setup({
+        defaults = {
+          mappings = {
+            i = { ['<c-t>'] = trouble.open_with_trouble },
+            n = { ['<c-t>'] = trouble.open_with_trouble },
+          }
+        }
+      })
+    end,
+    keys = {
+      { "<leader>q", [[<cmd>TroubleToggle document_diagnostics<cr>]] },
+      { "<leader>w", [[<cmd>TroubleToggle workspace_diagnostics<cr>]] },
+      { "<leader>xl", [[<cmd>TroubleToggle loclist<cr>]] },
+      { "<leader>xq", [[<cmd>TroubleToggle quickfix<cr>]] },
+      { "gd", [[<cmd>TroubleToggle lsp_definitions<cr>]] },
+      { "gr", [[<cmd>TroubleToggle lsp_references<cr>]] },
+    },
   },
 
   { -- Nvim Treesitter configurations and abstraction layer
