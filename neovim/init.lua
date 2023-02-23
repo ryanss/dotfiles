@@ -153,16 +153,36 @@ require("lazy").setup({
       vim.keymap.set("n", "K", vim.lsp.buf.hover)
       vim.keymap.set("n", "gd", vim.lsp.buf.definition)
       vim.keymap.set("n", "gr", vim.lsp.buf.references)
-      vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action)
-      vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename)
-      vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
+      vim.keymap.set("n", "gR", vim.lsp.buf.rename)
+      vim.keymap.set("n", "ga", vim.lsp.buf.code_action)
+      vim.keymap.set("n", "ge", vim.diagnostic.open_float)
 
-      local ts_repeat = require("nvim-treesitter.textobjects.repeatable_move")
-      local next_diagnostic, prev_diagnostic =
-        ts_repeat.make_repeatable_move_pair(
-          vim.diagnostic.goto_next, vim.diagnostic.goto_prev)
-      vim.keymap.set({"n", "x", "o"}, "]d", next_diagnostic)
-      vim.keymap.set({"n", "x", "o"}, "[d", prev_diagnostic)
+      local diag_opts = { severity = { min = vim.diagnostic.severity.HINT } }
+      local function update_severity(s)
+        diag_opts = s
+        if s ~= false then
+          diag_opts = { severity = { min = vim.diagnostic.severity[diag_opts] } }
+        end
+        vim.diagnostic.config({
+          underline = diag_opts,
+          virtual_text = diag_opts,
+          signs = diag_opts,
+        })
+        local ts_repeat = require("nvim-treesitter.textobjects.repeatable_move")
+        local next_diag, prev_diag = ts_repeat.make_repeatable_move_pair(
+          function() vim.diagnostic.goto_next(diag_opts) end,
+          function() vim.diagnostic.goto_prev(diag_opts) end)
+        vim.keymap.set({"n", "x", "o"}, "]e", next_diag)
+        vim.keymap.set({"n", "x", "o"}, "[e", prev_diag)
+      end
+      update_severity('HINT')
+      vim.keymap.set("n", "<space>ee", function() update_severity('ERROR') end)
+      vim.keymap.set("n", "<space>ew", function() update_severity('WARN') end)
+      vim.keymap.set("n", "<space>ed", function() update_severity('HINT') end)
+      vim.keymap.set("n", "<space>eo", function() update_severity(false) end)
+      vim.keymap.set("n", "<space>eq", function()
+        vim.diagnostic.setloclist(diag_opts)
+      end)
 
       require("lspconfig").lua_ls.setup({})
       require("lspconfig").pyright.setup({
