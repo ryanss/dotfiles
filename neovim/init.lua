@@ -124,6 +124,11 @@ require("lazy").setup({
         vim.keymap.set("n", "<leader>gs", gs.stage_hunk)
         vim.keymap.set("n", "<leader>gu", gs.undo_stage_hunk)
         vim.keymap.set({"o", "x"}, "ig", gs.select_hunk)
+        local ts_repeat = require("nvim-treesitter.textobjects.repeatable_move")
+        local next_hunk, prev_hunk =
+          ts_repeat.make_repeatable_move_pair(gs.next_hunk, gs.prev_hunk)
+        vim.keymap.set({"n", "x", "o"}, "]g", next_hunk)
+        vim.keymap.set({"n", "x", "o"}, "[g", prev_hunk)
       end,
     },
   },
@@ -149,8 +154,13 @@ require("lazy").setup({
       vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action)
       vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename)
       vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
-      vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-      vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+      local ts_repeat = require("nvim-treesitter.textobjects.repeatable_move")
+      local goto_next = vim.diagnostic.goto_next
+      local goto_prev = vim.diagnostic.goto_prev
+      local next_diagnostic, prev_diagnostic =
+        ts_repeat.make_repeatable_move_pair(goto_next, goto_prev)
+      vim.keymap.set({'n', "x", "o"}, ']d', next_diagnostic)
+      vim.keymap.set({'n', "x", "o"}, '[d', prev_diagnostic)
       require("lspconfig").lua_ls.setup({})
     end,
   },
@@ -222,12 +232,6 @@ require("lazy").setup({
       vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat.builtin_F)
       vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat.builtin_t)
       vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat.builtin_T)
-      -- Make gitsigns.nvim movement repeatable with ; and ,
-      local gs = require("gitsigns")
-      local next_hunk, prev_hunk =
-          ts_repeat.make_repeatable_move_pair(gs.next_hunk, gs.prev_hunk)
-      vim.keymap.set({ "n", "x", "o" }, "]g", next_hunk)
-      vim.keymap.set({ "n", "x", "o" }, "[g", prev_hunk)
     end,
   },
 
