@@ -139,6 +139,14 @@ require("lazy").setup({
     keys = {{ "<leader>gb", [[<cmd>Git blame<cr>]] }},
   },
 
+  { -- Detects and activates virtualenvs in your poetry or pipenv project
+    "petobens/poet-v",
+    init = function()
+      vim.g.poetv_executables = {"poetry"}
+      vim.g.poetv_auto_activate = 1
+    end,
+  },
+
   { -- Language Server Protocols
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -191,12 +199,21 @@ require("lazy").setup({
     end,
   },
 
-  { -- Detects and activates virtualenvs in your poetry or pipenv project
-    "petobens/poet-v",
-    init = function()
-      vim.g.poetv_executables = {"poetry"}
-      vim.g.poetv_auto_activate = 1
+  { -- A tree like view for symbols in Neovim using the Language Server Protocol
+    "simrat39/symbols-outline.nvim",
+    config = function()
+      require("symbols-outline").setup({
+        autofold_depth = 1,
+        -- show_symbol_details = false,
+      })
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "Outline",
+        callback = function()
+          vim.opt_local.signcolumn = "no"
+        end,
+      })
     end,
+    keys = {{ "<leader>o", [[<cmd>SymbolsOutline<cr>]]}},
   },
 
   { -- Nvim Treesitter configurations and abstraction layer
