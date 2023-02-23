@@ -109,7 +109,7 @@ require("lazy").setup({
   { -- Magit clone for Neovim
     "TimUntersberger/neogit",
     opts = { disable_commit_confirmation = true },
-    keys = {{ "<leader>gg", [[<cmd>Neogit<cr>]] }},
+    keys = {{ "<leader>gg", [[<cmd>write<cr><cmd>Neogit<cr>]] }},
   },
 
   { -- Git decorations for buffers
