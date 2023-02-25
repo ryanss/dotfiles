@@ -332,11 +332,16 @@ require("lazy").setup({
     "ntpeters/vim-better-whitespace",
     config = function()
       vim.g.better_whitespace_enabled = 1
+      vim.g.better_whitespace_filetypes_blacklist = {'toggleterm'}
       vim.g.strip_whitespace_on_save = 1
-      vim.g.strip_whitespace_confirm = 0
+      vim.g.strip_whitespace_confirm = 1
       vim.g.strip_only_modified_lines = 1 -- brew install diffutils
-      vim.keymap.set("n", "]w", [[<cmd>NextTrailingWhitespace<cr>]])
-      vim.keymap.set("n", "[w", [[<cmd>PrevTrailingWhitespace<cr>]])
+      local ts_repeat = require("nvim-treesitter.textobjects.repeatable_move")
+      local next_ws, prev_ws = ts_repeat.make_repeatable_move_pair(
+        function() vim.cmd([[NextTrailingWhitespace]]) end,
+        function() vim.cmd([[PrevTrailingWhitespace]]) end)
+      vim.keymap.set("n", "]w", next_ws)
+      vim.keymap.set("n", "[w", prev_ws)
     end,
   },
 
