@@ -328,6 +328,18 @@ require("lazy").setup({
     config = true,
   },
 
+  { -- Better whitespace highlighting for Vim
+    "ntpeters/vim-better-whitespace",
+    config = function()
+      vim.g.better_whitespace_enabled = 1
+      vim.g.strip_whitespace_on_save = 1
+      vim.g.strip_whitespace_confirm = 0
+      vim.g.strip_only_modified_lines = 1 -- brew install diffutils
+      vim.keymap.set("n", "]w", [[<cmd>NextTrailingWhitespace<cr>]])
+      vim.keymap.set("n", "[w", [[<cmd>PrevTrailingWhitespace<cr>]])
+    end,
+  },
+
   { -- Improved Yank and Put functionalities for Neovim
     "gbprod/yanky.nvim",
     dependencies = "kkharji/sqlite.lua",
