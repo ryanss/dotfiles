@@ -441,6 +441,10 @@ vim.keymap.set("n", "<leader>l", [[<cmd>Lazy<cr>]])
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true })
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true })
 
+-- Use Caps+j/k in command completion popups
+vim.keymap.set('c', '<up>',   '<C-p>')
+vim.keymap.set('c', '<down>', '<C-n>')
+
 -- Toggle terminals; move between splits
 local function termcmd(key, direction)
   local vcount = vim.v.count
