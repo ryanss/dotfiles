@@ -190,8 +190,14 @@ require("lazy").setup({
         vim.diagnostic.setloclist(diag_opts)
       end)
 
-      require("lspconfig").lua_ls.setup({})
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
+      require("lspconfig").lua_ls.setup({
+        capabilities = capabilities,
+        settings = { Lua = { completion = { keywordSnippet = "Disable" } } } })
       require("lspconfig").pyright.setup({
+        capabilities = capabilities,
         settings = { python = { pythonPath = ".venv/bin/python" } },
       })
     end,
@@ -236,6 +242,47 @@ require("lazy").setup({
       { "gd", [[<cmd>TroubleToggle lsp_definitions<cr>]] },
       { "gr", [[<cmd>TroubleToggle lsp_references<cr>]] },
     },
+  },
+
+  { -- A completion plugin for neovim coded in Lua
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+    },
+    config = function()
+      local cmp = require("cmp")
+      cmp.setup({
+        sources = cmp.config.sources({
+          { name = "nvim_lsp", max_item_count = 5 },
+          { name = "buffer", max_item_count = 5 },
+          { name = "path",
+            option = {
+              get_cwd = function() return vim.fn.getcwd() end,
+            },
+          },
+          { name = "luasnip" },
+        }),
+        mapping = cmp.mapping.preset.insert({
+          ['<tab>'] = cmp.mapping.confirm({ select = true }),
+          ['<S-tab>'] = cmp.mapping.abort(),
+          ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-d>'] = cmp.mapping.scroll_docs(4),
+        }),
+        window = {
+          completion = cmp.config.window.bordered(),
+          documentation = cmp.config.window.bordered(),
+        },
+        snippet = {
+          expand = function(args)
+            require('luasnip').lsp_expand(args.body)
+          end,
+        },
+      })
+    end,
   },
 
   { -- Nvim Treesitter configurations and abstraction layer
