@@ -311,6 +311,14 @@ require("lazy").setup({
     end,
   },
 
+  { -- Treesitter playground integrated into Neovim
+    "nvim-treesitter/playground",
+    keys = {
+      { "<leader>Tc", [[<cmd>TSHighlightCapturesUnderCursor<cr>]]},
+      { "<leader>Tp", [[<cmd>TSPlaygroundToggle<cr>]]},
+    },
+  },
+
   { -- Syntax aware text-objects, select, move, swap, and peek support
     "nvim-treesitter/nvim-treesitter-textobjects",
     dependencies = "nvim-treesitter/nvim-treesitter",
