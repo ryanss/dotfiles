@@ -40,3 +40,7 @@ n ()
         rm -f "$NNN_TMPFILE" > /dev/null
     fi
 }
+
+# Misc
+export EDITOR=nvim
+alias v="nvim"
