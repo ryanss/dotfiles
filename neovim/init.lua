@@ -48,9 +48,15 @@ require("lazy").setup({
     config = function()
       vim.g.nord_borders = true
       vim.g.nord_disable_background = true
+      vim.g.nord_bold = false
       vim.g.nord_italic = false
       vim.cmd.colorscheme("nord")
       vim.cmd([[highlight @comment gui=italic]])
+      vim.cmd([[highlight @keyword.function guifg=#81A1C1]])
+      vim.cmd([[highlight @keyword.operator guifg=#81A1C1]])
+      vim.cmd([[highlight @keyword.return guifg=#81A1C1]])
+      vim.cmd([[highlight @function gui=bold]])
+      vim.cmd([[highlight @function.call guifg=#88C0D0 gui=none]])
     end,
   },
 
