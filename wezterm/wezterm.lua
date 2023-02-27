@@ -15,6 +15,7 @@ return {
   -- Font
   font = wezterm.font "CaskaydiaCove Nerd Font Mono",
   font_size = 20,
+  line_height = 1.1,
   adjust_window_size_when_changing_font_size = false,
 
   -- Colors
