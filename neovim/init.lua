@@ -393,11 +393,14 @@ require("lazy").setup({
   { -- Better whitespace highlighting for Vim
     "ntpeters/vim-better-whitespace",
     config = function()
-      vim.g.better_whitespace_enabled = 1
+      -- Do it this way to prevent unwanted highlighting in insert mode
+      vim.g.better_whitespace_enabled = 0
+      vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+          vim.cmd([[EnableWhitespace]])
+        end,
+      })
       vim.g.better_whitespace_filetypes_blacklist = {'toggleterm'}
-      vim.g.strip_whitespace_on_save = 1
-      vim.g.strip_whitespace_confirm = 1
-      vim.g.strip_only_modified_lines = 1 -- brew install diffutils
       local ts_repeat = require("nvim-treesitter.textobjects.repeatable_move")
       local next_ws, prev_ws = ts_repeat.make_repeatable_move_pair(
         function() vim.cmd([[NextTrailingWhitespace]]) end,

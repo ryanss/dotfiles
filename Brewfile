@@ -1,7 +1,6 @@
 tap "homebrew/bundle"
 
 tap "homebrew/core"
-brew "diffutils"
 brew "neovim"
 brew "nnn"
 brew "ripgrep"
