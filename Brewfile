@@ -6,6 +6,7 @@ brew "nnn"
 brew "ripgrep"
 
 tap "homebrew/cask"
+cask "hammerspoon"
 cask "wezterm"
 
 tap "homebrew/cask-fonts"
