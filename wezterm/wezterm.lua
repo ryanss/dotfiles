@@ -2,7 +2,8 @@ local wezterm = require "wezterm"
 
 wezterm.on("window-config-reloaded", function(window, pane)
   local screen = wezterm.gui.screens().active
-  local menu = 76 -- macOS menubar height in retina pixels
+  local menu = 76 -- macOS menubar height in retina pixels on MacBook Pro 14" screen
+  if screen.height == 2880 then menu = 50 end -- macOS menubar height on external 4k monitor
   window:set_inner_size(screen.width * 0.8, (screen.height - menu) * 0.8)
   window:set_position(screen.width * 0.1, (screen.height - menu) * 0.1 + menu)
 end)
