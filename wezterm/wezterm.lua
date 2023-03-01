@@ -1,11 +1,18 @@
 local wezterm = require "wezterm"
 
+---@diagnostic disable-next-line: unused-local
 wezterm.on("window-config-reloaded", function(window, pane)
+  local windows = wezterm.GLOBAL.windows_loaded or {}
+  -- Only run function to resize window once when window created
+  if windows[tostring(window:window_id())] ~= nil then return end
   local screen = wezterm.gui.screens().active
   local menu = 76 -- macOS menubar height in retina pixels on MacBook Pro 14" screen
   if screen.height == 2880 then menu = 50 end -- macOS menubar height on external 4k monitor
   window:set_inner_size(screen.width * 0.8, (screen.height - menu) * 0.8)
   window:set_position(screen.width * 0.1, (screen.height - menu) * 0.1 + menu)
+  -- Mark window as loaded so it is not resized again during use
+  windows[tostring(window:window_id())] = true
+  wezterm.GLOBAL.windows_loaded = windows
 end)
 
 local function change_opacity(window, delta)
