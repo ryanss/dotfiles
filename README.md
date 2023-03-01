@@ -32,10 +32,19 @@ ln -s ~/dotfiles/neovim ~/.config/nvim
 ln -s ~/dotfiles/wezterm ~/.config/wezterm
 ln -s ~/dotfiles/misc/gitconfig ~/.config/git/config
 ln -s ~/dotfiles/misc/zprofile ~/.zprofile
+ln -s ~/dotfiles/misc/zshrc ~/.zshrc
 ```
+
+## Create nvim.app for opening files in Wezterm/Neovim
+- Automator.app > New > Application
+- Insert Library > Run AppleScript
+- Paste contents of neovim/nvim.applescript
+- Save as /Applications/nvim.app
+- Open /Applications > Right-click nvim.app > Get Info
+- Drag neovim/nvim.png into icon of Get Info dialog
+- System Settings... > Privacy & Security > Accessibility > + > nvim.app
 
 ## Update Brewfile
 ```zsh
 brew bundle dump ~/dotfiles/Brewfile --force
 ```
-
