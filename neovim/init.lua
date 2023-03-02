@@ -380,6 +380,10 @@ require("lazy").setup({
     config = true,
   },
 
+  { -- A nicer Python indentation style for vim
+    "Vimjas/vim-python-pep8-indent"
+  },
+
   { -- Add/change/delete surrounding delimiter pairs with ease
     "kylechui/nvim-surround",
     config = true,
