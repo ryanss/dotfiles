@@ -495,6 +495,12 @@ vim.keymap.set({"n", "t"}, "<C-A-k>", [[<cmd>resize +2<cr>]])
 vim.keymap.set({"n", "t"}, "<C-A-h>", [[<cmd>vertical resize +3<cr>]])
 vim.keymap.set({"n", "t"}, "<C-A-l>", [[<cmd>vertical resize -3<cr>]])
 
+-- Toggle line numbers
+vim.keymap.set("n", "<leader>1",
+  function() vim.o.number = not vim.o.number end)
+vim.keymap.set("n", "<leader>2",
+  function() vim.o.relativenumber = not vim.o.relativenumber end)
+
 -- Move to long lines
 local function search_long_line(length, reverse)
   local flags = "e"
