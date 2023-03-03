@@ -494,3 +494,17 @@ vim.keymap.set({"n", "t"}, "<C-A-j>", [[<cmd>resize -2<cr>]])
 vim.keymap.set({"n", "t"}, "<C-A-k>", [[<cmd>resize +2<cr>]])
 vim.keymap.set({"n", "t"}, "<C-A-h>", [[<cmd>vertical resize +3<cr>]])
 vim.keymap.set({"n", "t"}, "<C-A-l>", [[<cmd>vertical resize -3<cr>]])
+
+-- Move to long lines
+local function search_long_line(length, reverse)
+  local flags = "e"
+  if reverse then flags = "be" end
+      vim.fn.search("^.\\{" .. length .. ",}$", flags)
+end
+local ts_repeat = require("nvim-treesitter.textobjects.repeatable_move")
+local next_long_line, prev_long_line =
+  ts_repeat.make_repeatable_move_pair(
+    function() search_long_line(81, false) end,
+    function() search_long_line(81, true) end)
+vim.keymap.set({"n", "x"}, "]8", next_long_line)
+vim.keymap.set({"n", "x"}, "[8", prev_long_line)
