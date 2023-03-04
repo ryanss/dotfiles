@@ -22,14 +22,16 @@ ln -sf ~/dotfiles/hammerspoon/KeyRemapping.plist \
 ```
 
 ## Change default location of Hammerspoon config
+```zsh
 defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
+```
 
 ## Symlink config files
 ```zsh
-mkdir -p ~/.config/git
 ln -s ~/dotfiles/hammerspoon ~/.config/hammerspoon
 ln -s ~/dotfiles/neovim ~/.config/nvim
 ln -s ~/dotfiles/wezterm ~/.config/wezterm
+mkdir -p ~/.config/git
 ln -s ~/dotfiles/misc/gitconfig ~/.config/git/config
 ln -s ~/dotfiles/misc/zprofile ~/.zprofile
 ln -s ~/dotfiles/misc/zshrc ~/.zshrc
