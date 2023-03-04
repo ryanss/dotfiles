@@ -455,8 +455,10 @@ require("lazy").setup({
       vim.keymap.set("n", "<C-n>", [[<Plug>(YankyCycleBackward)]])
       require("telescope").load_extension("yank_history")
       vim.keymap.set("n", "<leader>y", [[<cmd>Telescope yank_history<cr>]])
-      -- Copy to system clipboard
-      vim.keymap.set("v", "<C-c>", '"+y')
+      -- Copy and paste with system clipboard
+      vim.keymap.set("x", "<C-c>", '"+y')
+      vim.keymap.set({"i", "c"}, "<C-v>", "<C-r>+")
+      vim.keymap.set("t", "<C-v>", '<C-\\><C-N>"+pi')
     end,
   },
 
