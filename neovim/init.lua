@@ -144,6 +144,11 @@ require("lazy").setup({
     keys = {{ "<leader>gb", [[<cmd>Git blame<cr>]] }},
   },
 
+  { -- Heuristically set buffer indentation options `shiftwidth` and `expandtab`
+    "tpope/vim-sleuth",
+    keys = {{ "<leader>S", [[<cmd>verbose Sleuth<Cr>]]}}
+  },
+
   { -- Detects and activates virtualenvs in your poetry or pipenv project
     "petobens/poet-v",
     init = function()
