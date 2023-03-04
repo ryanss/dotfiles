@@ -298,7 +298,10 @@ require("lazy").setup({
       require("nvim-treesitter.configs").setup({
         ensure_installed = { "c", "lua", "vim", "help" },
         auto_install = true,
-        highlight = { enable = true },
+        highlight = {
+          enable = true,
+          disable = { "html" },
+        },
         incremental_selection = {
           enable = true,
           keymaps = {
@@ -367,6 +370,23 @@ require("lazy").setup({
       vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat.builtin_F)
       vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat.builtin_t)
       vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat.builtin_T)
+    end,
+  },
+
+  { -- Rainbow parentheses for neovim using tree-sitter
+    "mrjones2014/nvim-ts-rainbow",
+    event = "BufReadPost",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        rainbow = { enable = true },
+      })
+      vim.cmd([[highlight rainbowcol1 guifg=#88C0D0]]) -- nord8  light blue
+      vim.cmd([[highlight rainbowcol2 guifg=#B48EAD]]) -- nord15 purple
+      vim.cmd([[highlight rainbowcol3 guifg=#EBCB8B]]) -- nord13 yellow
+      vim.cmd([[highlight rainbowcol4 guifg=#5E81AC]]) -- nord10 dark blue
+      vim.cmd([[highlight rainbowcol5 guifg=#BF616A]]) -- nord11 red
+      vim.cmd([[highlight rainbowcol6 guifg=#A3BE8C]]) -- nord14 green
+      vim.cmd([[highlight rainbowcol7 guifg=#D08770]]) -- nord12 orange
     end,
   },
 
