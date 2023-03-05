@@ -137,20 +137,6 @@ require("lazy").setup({
     keys = {{ "<leader>gb", [[<cmd>Git blame<cr>]] }},
   },
 
-  { -- Heuristically set buffer indentation options `shiftwidth` and `expandtab`
-    "tpope/vim-sleuth",
-    init = function()
-      local tab2 = 'expandtab shiftwidth=2 tabstop=2'
-      vim.g.sleuth_css_defaults = tab2
-      vim.g.sleuth_html_defaults = tab2
-      vim.g.sleuth_js_defaults = tab2
-      vim.g.sleuth_json_defaults = tab2
-      vim.g.sleuth_lua_defaults = tab2
-    end,
-    event = "BufReadPost",
-    keys = {{ "<leader>S", [[<cmd>verbose Sleuth<Cr>]]}}
-  },
-
   { -- Detects and activates virtualenvs in your poetry or pipenv project
     "petobens/poet-v",
     init = function()
@@ -412,13 +398,34 @@ require("lazy").setup({
     config = true,
   },
 
-  { -- A nicer Python indentation style for vim
-    "Vimjas/vim-python-pep8-indent"
-  },
-
   { -- Add/change/delete surrounding delimiter pairs with ease
     "kylechui/nvim-surround",
     config = true,
+  },
+
+  { -- Heuristically set buffer indentation options `shiftwidth` and `expandtab`
+    "tpope/vim-sleuth",
+    init = function()
+      local tab2 = 'expandtab shiftwidth=2 tabstop=2'
+      vim.g.sleuth_css_defaults = tab2
+      vim.g.sleuth_html_defaults = tab2
+      vim.g.sleuth_js_defaults = tab2
+      vim.g.sleuth_json_defaults = tab2
+      vim.g.sleuth_lua_defaults = tab2
+    end,
+    event = "BufReadPost",
+    keys = {{ "<leader>S", [[<cmd>verbose Sleuth<Cr>]]}}
+  },
+
+  { -- A nicer Python indentation style for vim
+    "Vimjas/vim-python-pep8-indent",
+    config = function()
+      vim.keymap.set({'n','x'}, 'ga', '<Plug>(EasyAlign)')
+    end,
+  },
+
+  { -- A simple, easy-to-use Vim alignment plugin
+    "junegunn/vim-easy-align",
   },
 
   { -- Smart and powerful comment plugin for neovim
