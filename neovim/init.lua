@@ -419,26 +419,6 @@ require("lazy").setup({
     config = true,
   },
 
-  { -- Better whitespace highlighting for Vim
-    "ntpeters/vim-better-whitespace",
-    config = function()
-      -- Do it this way to prevent unwanted highlighting in insert mode
-      vim.g.better_whitespace_enabled = 0
-      vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
-          vim.cmd([[EnableWhitespace]])
-        end,
-      })
-      vim.g.better_whitespace_filetypes_blacklist = {'toggleterm'}
-      local ts_repeat = require("nvim-treesitter.textobjects.repeatable_move")
-      local next_ws, prev_ws = ts_repeat.make_repeatable_move_pair(
-        function() vim.cmd([[NextTrailingWhitespace]]) end,
-        function() vim.cmd([[PrevTrailingWhitespace]]) end)
-      vim.keymap.set("n", "]w", next_ws)
-      vim.keymap.set("n", "[w", prev_ws)
-    end,
-  },
-
   { -- Improved Yank and Put functionalities for Neovim
     "gbprod/yanky.nvim",
     dependencies = "kkharji/sqlite.lua",
@@ -541,3 +521,34 @@ local next_long_line, prev_long_line =
     function() search_long_line(81, true) end)
 vim.keymap.set({"n", "x"}, "]8", next_long_line)
 vim.keymap.set({"n", "x"}, "[8", prev_long_line)
+
+-- Hightlight unwanted whitespace
+vim.cmd([[highlight ExtraWhitespace ctermbg=red guibg=red]])
+vim.api.nvim_create_autocmd({"BufWinEnter", "InsertLeave"}, {
+  callback = function()
+    vim.cmd([[match ExtraWhitespace /\s\+$/]])
+    vim.cmd([[match ExtraWhitespace /\($\n\s*\)\+\%$/]])
+  end,
+})
+vim.api.nvim_create_autocmd("InsertEnter", {
+  callback = function() vim.cmd([[match ExtraWhitespace /\s\+\%#\@<!$/]]) end,
+})
+-- Move to unwanted whitespace
+local next_ws, prev_ws = ts_repeat.make_repeatable_move_pair(
+  function() vim.fn.search("\\s\\+$", "e") end,
+  function() vim.fn.search("\\s\\+$", "be") end)
+vim.keymap.set({"n", "x"}, "]s", next_ws)
+vim.keymap.set({"n", "x"}, "[s", prev_ws)
+-- Remove unwanted whitespace
+vim.keymap.set("n", "<leader>s", function()
+     vim.cmd([[let cursor = getpos('.')]])
+     vim.cmd([[%s/\s\+$//ge]]) -- Trailing whitespace end of lines
+     vim.cmd([[%s/\($\n\s*\)\+\%$//ge]]) -- Extra lines end of file
+     vim.cmd([[call setpos('.', cursor)]])
+end)
+vim.keymap.set("x", "<leader>s", function()
+     vim.cmd([[let cursor = getpos('.')]])
+     vim.cmd([[%s/\%V\s\+$//ge]]) -- Trailing whitespace end of lines
+     vim.cmd([[%s/\%V\($\n\s*\)\+\%$//ge]]) -- Extra lines end of file
+     vim.cmd([[call setpos('.', cursor)]])
+end)
