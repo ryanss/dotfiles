@@ -79,6 +79,7 @@ require("lazy").setup({
       { "<leader>p", [[<cmd>Telescope projects<cr>]] },
       { "<leader><tab>", [[<cmd>Telescope buffers ]] ..
                          [[sort_mru=true ignore_current_buffer=true<cr>]] },
+      { "<leader>/", [[<cmd>Telescope live_grep<cr>]]},
     },
   },
 
