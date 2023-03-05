@@ -426,6 +426,11 @@ require("lazy").setup({
     config = true,
   },
 
+  { -- The fastest Neovim colorizer
+    "NvChad/nvim-colorizer.lua",
+    config = function() require("colorizer").setup({}) end,
+  },
+
   { -- Improved Yank and Put functionalities for Neovim
     "gbprod/yanky.nvim",
     dependencies = "kkharji/sqlite.lua",
