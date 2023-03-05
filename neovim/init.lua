@@ -256,6 +256,11 @@ require("lazy").setup({
     },
   },
 
+  { -- Find the enemy and replace them with dark power
+    "nvim-pack/nvim-spectre",
+    keys = {{ "<leader>?", function() require("spectre").open() end }},
+  },
+
   { -- A completion plugin for neovim coded in Lua
     "hrsh7th/nvim-cmp",
     dependencies = {
