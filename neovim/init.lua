@@ -16,14 +16,6 @@ vim.o.tabstop = 4
 vim.o.termguicolors = true
 vim.o.wrap = false
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "json,lua",
-  callback = function()
-    vim.bo.shiftwidth = 2
-    vim.bo.tabstop = 2
-  end,
-})
-
 
 -- Bootstrap lazy.nvim plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -147,6 +139,15 @@ require("lazy").setup({
 
   { -- Heuristically set buffer indentation options `shiftwidth` and `expandtab`
     "tpope/vim-sleuth",
+    init = function()
+      local tab2 = 'expandtab shiftwidth=2 tabstop=2'
+      vim.g.sleuth_css_defaults = tab2
+      vim.g.sleuth_html_defaults = tab2
+      vim.g.sleuth_js_defaults = tab2
+      vim.g.sleuth_json_defaults = tab2
+      vim.g.sleuth_lua_defaults = tab2
+    end,
+    event = "BufReadPost",
     keys = {{ "<leader>S", [[<cmd>verbose Sleuth<Cr>]]}}
   },
 
