@@ -378,13 +378,13 @@ require("lazy").setup({
       require("nvim-treesitter.configs").setup({
         rainbow = { enable = true },
       })
-      vim.cmd([[highlight rainbowcol1 guifg=#88C0D0]]) -- nord8  light blue
-      vim.cmd([[highlight rainbowcol2 guifg=#B48EAD]]) -- nord15 purple
-      vim.cmd([[highlight rainbowcol3 guifg=#EBCB8B]]) -- nord13 yellow
-      vim.cmd([[highlight rainbowcol4 guifg=#5E81AC]]) -- nord10 dark blue
-      vim.cmd([[highlight rainbowcol5 guifg=#BF616A]]) -- nord11 red
-      vim.cmd([[highlight rainbowcol6 guifg=#A3BE8C]]) -- nord14 green
-      vim.cmd([[highlight rainbowcol7 guifg=#D08770]]) -- nord12 orange
+      vim.cmd([[highlight rainbowcol1 guifg=#88C0D0]]) -- nord8
+      vim.cmd([[highlight rainbowcol2 guifg=#B48EAD]]) -- nord15
+      vim.cmd([[highlight rainbowcol3 guifg=#EBCB8B]]) -- nord13
+      vim.cmd([[highlight rainbowcol4 guifg=#5E81AC]]) -- nord10
+      vim.cmd([[highlight rainbowcol5 guifg=#BF616A]]) -- nord11
+      vim.cmd([[highlight rainbowcol6 guifg=#A3BE8C]]) -- nord14
+      vim.cmd([[highlight rainbowcol7 guifg=#D08770]]) -- nord12
     end,
   },
 
@@ -548,7 +548,7 @@ vim.api.nvim_create_autocmd({"BufWinEnter", "InsertLeave"}, {
     if vim.bo.filetype == "toggleterm" then return end
     if vim.bo.filetype == "" then return end -- NeogitStatus
     vim.cmd([[match ExtraWhitespace /\s\+$/]])
-    vim.cmd([[match ExtraWhitespace /\($\n\s*\)\+\%$/]])
+    vim.cmd([[2match ExtraWhitespace /\($\n\s*\)\+\%$/]])
   end,
 })
 vim.api.nvim_create_autocmd("InsertEnter", {
@@ -562,14 +562,19 @@ vim.keymap.set({"n", "x"}, "]s", next_ws)
 vim.keymap.set({"n", "x"}, "[s", prev_ws)
 -- Remove unwanted whitespace
 vim.keymap.set("n", "<leader>s", function()
-     vim.cmd([[let cursor = getpos('.')]])
-     vim.cmd([[%s/\s\+$//ge]]) -- Trailing whitespace end of lines
-     vim.cmd([[%s/\($\n\s*\)\+\%$//ge]]) -- Extra lines end of file
-     vim.cmd([[call setpos('.', cursor)]])
+  vim.cmd([[let cursor = getpos('.')]])
+  vim.cmd([[%s/\s\+$//ge]]) -- Trailing whitespace end of lines
+  vim.cmd([[%s/\($\n\s*\)\+\%$//ge]]) -- Extra lines end of file
+  vim.cmd([[call setpos('.', cursor)]])
 end)
 vim.keymap.set("x", "<leader>s", function()
-     vim.cmd([[let cursor = getpos('.')]])
-     vim.cmd([[%s/\%V\s\+$//ge]]) -- Trailing whitespace end of lines
-     vim.cmd([[%s/\%V\($\n\s*\)\+\%$//ge]]) -- Extra lines end of file
-     vim.cmd([[call setpos('.', cursor)]])
+  vim.cmd([[let cursor = getpos('.')]])
+  local pos1 = vim.fn.getpos(".")[2]
+  local pos2 = vim.fn.getpos("v")[2]
+  if pos1 > pos2 then
+    pos1, pos2 = pos2, pos1
+  end
+  vim.cmd.s({[[/\s\+$//ge]], range = {pos1, pos2}}) -- End of lines
+  vim.cmd.s({[[/\($\n\s*\)\+\%$//ge]], range = {pos1, pos2}}) -- End of file
+  vim.cmd([[call setpos('.', cursor)]])
 end)
