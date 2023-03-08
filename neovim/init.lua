@@ -545,6 +545,7 @@ vim.keymap.set({"n", "x"}, "[8", prev_long_line)
 vim.cmd([[highlight ExtraWhitespace ctermbg=red guibg=red]])
 vim.api.nvim_create_autocmd({"BufWinEnter", "InsertLeave"}, {
   callback = function()
+    if vim.bo.filetype == "help" then return end
     if vim.bo.filetype == "toggleterm" then return end
     if vim.bo.filetype == "" then return end -- NeogitStatus
     vim.cmd([[match ExtraWhitespace /\s\+$/]])
