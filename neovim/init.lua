@@ -68,6 +68,15 @@ require("lazy").setup({
   { -- Highly extendable fuzzy finder over lists
     "nvim-telescope/telescope.nvim",
     dependencies = "nvim-lua/plenary.nvim",
+    opts = {
+      pickers = {
+        buffers = {
+          mappings = {
+            i = { ["<C-d>"] = "delete_buffer" },
+          },
+        },
+      },
+    },
     keys = {
       { "<leader>f", [[<cmd>Telescope find_files hidden=true<cr>]] },
       { "<leader>p", [[<cmd>Telescope projects<cr>]] },
