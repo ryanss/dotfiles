@@ -414,6 +414,15 @@ require("lazy").setup({
     config = true,
   },
 
+  { -- Neovim plugin for splitting/joining blocks of code
+    "Wansmer/treesj",
+    opts = { use_default_keymaps = false },
+    keys = {
+      { "<leader>j", [[<cmd>TSJSplit<cr>]] },
+      { "<leader>J", [[<cmd>TSJJoin<cr>]] },
+    },
+  },
+
   { -- Heuristically set buffer indentation options `shiftwidth` and `expandtab`
     "tpope/vim-sleuth",
     init = function()
